@@ -2,7 +2,12 @@
   functions = "netlify/functions"
   publish   = "."
 
-# Route /api/generate → the serverless function
+[functions]
+  node_bundler = "esbuild"
+
+[functions."generate"]
+  timeout = 26
+
 [[redirects]]
   from   = "/api/generate"
   to     = "/.netlify/functions/generate"
