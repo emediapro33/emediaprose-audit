@@ -679,8 +679,8 @@ async function generateReport() {
   document.getElementById('gen-state').style.display = 'block';
   document.getElementById('error-box').style.display = 'none';
 
-  try {
-   const res = await fetch('/api/generate', {
+try {
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -688,7 +688,9 @@ async function generateReport() {
         answers: answers,
       })
     });
-    const text = data.content.map(c => c.text||'').join('');
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || 'Server error');
+    const text = data.report;
     const sections = parseSections(text);
 
     document.getElementById('quiz-wrap').style.display = 'none';
