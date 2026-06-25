@@ -645,67 +645,30 @@ function goNext() {
 // ── Prompt ────────────────────────────────────────────────────────────────────
 function buildPrompt() {
   const a = answers;
-  return `You are an expert AI transformation consultant writing a personalized AI Readiness Report for ${a.companyName||'this company'}.
+  return `You are an AI transformation consultant. Write a brief 4-section AI Readiness Report for ${a.companyName||'this company'} in ${a.industry}, team size ${a.teamSize}.
 
-Here is what we know about them from their audit:
+Their tools: ${(a.techStack||[]).join(', ')}${a.techStack_other ? ', '+a.techStack_other : ''}
+AI comfort: ${a.aiReadiness}
+Biggest pain: ${a.biggestPain}
+90-day goal: ${a.win90}
+Content lives in: ${(a.contentHome||[]).join(', ')}
+Time wasters: ${(a.timeWaste||[]).join(', ')}
 
-BUSINESS CONTEXT:
-- Industry: ${a.industry}
-- Team size: ${a.teamSize}
-- Daily tools: ${(a.techStack||[]).filter(t=>t!=='Other / Custom').concat(a.techStack_other?[a.techStack_other]:[]).join(', ')}
-- Top revenue workflows: ${a.revenue}
-
-CONTENT & BRAND ASSETS:
-- Content currently lives in: ${(a.contentHome||[]).join(', ')}
-- Content types they have: ${(a.contentTypes||[]).join(', ')}
-- Who manages content: ${a.contentOwner}
-
-AI EXPOSURE:
-- AI tools in use: ${(a.aiTools||[]).join(', ')}
-- How AI is used: ${(a.aiUse||[]).join(', ')}
-- Team AI comfort level: ${a.aiReadiness}
-
-PAIN & AMBITION:
-- Biggest operational bottleneck: ${a.biggestPain}
-- Where they lose the most time: ${(a.timeWaste||[]).join(', ')}
-- What a 90-day win looks like: ${a.win90}
-
-Write a 4-section personalized report. Use **bold** for key terms. Use ### for subsection headers inside sections. Be specific to their actual answers — no generic advice.
-
----
+Write exactly 4 sections, each 2-3 short paragraphs. Be specific to their situation.
 
 SECTION 1: YOUR AI READINESS SNAPSHOT
-Write 3–4 paragraphs. Give an honest, direct assessment of where this company stands in their AI readiness journey. Reference their specific tools, workflows, and team size. Name what's working, what's missing, and what the single most important gap is. Speak like a consultant who just reviewed their operation — not a sales pitch, not a pep talk.
-
----
+Honest assessment of where they stand. Reference their specific tools and pain points.
 
 SECTION 2: YOUR 30-DAY QUICK WIN — BUILDING YOUR AI-READY BRAND CONTENT HUB
-Write a step-by-step workflow they can execute in 30 days without outside help. Customize it to their actual content situation. The goal is to consolidate all brand content into an AI/LLM-ready content management and digital asset management system — a centralized repository that AI agents can search to create new products or campaigns, positioning them for a future where most research originates with LLMs.
-
-Structure it as:
-### Week 1: Audit & Gather
-### Week 2: Standardize & Tag
-### Week 3: Centralize
-### Week 4: Test with AI & Declare Victory
-
-For each week, give 3–5 specific, actionable steps customized to their actual stack. Make the tagging and metadata instructions specific enough that someone could do them Monday morning. End with: "When this is complete, you'll have the foundational layer every agentic AI system needs to work for your business."
-
----
+A week-by-week action plan (Week 1-4) to consolidate brand content into an AI-searchable system, customized to their actual tools. End with: "When this is complete, you'll have the foundational layer every agentic AI system needs to work for your business."
 
 SECTION 3: YOUR 90-DAY AGENTIC ROADMAP
-Identify 3 specific workflow transformations based on their biggest pain points and time wasters. For each:
-- Name the workflow
-- Describe the current broken state (referencing their actual answers)
-- Describe what it looks like with an AI agent running it
-- Estimate the weekly time saved
-- Name which of their existing tools this would plug into
-
----
+3 specific workflow transformations based on their pain points. For each: current state, AI-powered future state, time saved.
 
 SECTION 4: YOUR EMEDIAPROSE IMPLEMENTATION PATH
-Write 2–3 paragraphs. Summarize what it would look like to have eMediaProse (an AI-first business transformation consultancy) execute this roadmap for them. Reference 1–2 specific items from their 90-day roadmap. Be warm but not salesy. End with: "The roadmap above is yours to keep. When you're ready to build it faster, we're one conversation away."
+How eMediaProse can execute this roadmap. End with: "The roadmap above is yours to keep. When you're ready to build it faster, we're one conversation away."
 
-Do not add any preamble or closing remarks outside these four sections. Begin immediately with SECTION 1.`;
+Be concise. Start immediately with SECTION 1.`;
 }
 
 // ── API call ──────────────────────────────────────────────────────────────────
