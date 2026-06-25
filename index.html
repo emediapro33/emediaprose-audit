@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Readiness Audit · eMediaProse</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Brand tokens (from eMediaProse PDF) ── */
+  :root {
+    --orange:    #E8450A;
+    --orange-lt: #F26030;
+    --teal:      #3DBFBF;
+    --slate:     #5A6B82;
+    --near-black:#1A1A2E;
+    --body-text: #2C2C2C;
+    --mid-text:  #666666;
+    --bg:        #F5F5F0;
+    --surface:   #FFFFFF;
+    --border:    #E0E0DA;
+    --card-head: #EDEDEA;
+    --font:      'Montserrat', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--body-text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--near-black);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 52px;
+  }
+  .logo-bar {
+    width: 6px;
+    height: 28px;
+    background: var(--orange);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .header-sub {
+    color: #8899AA;
+    font-size: 13px;
+    margin-left: auto;
+    font-weight: 400;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--near-black);
+    padding: 48px 40px 52px;
+    border-bottom: 3px solid var(--orange);
+  }
+  .hero-eyebrow {
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    color: #fff;
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    max-width: 560px;
+  }
+  .hero h1 span { color: var(--teal); }
+  .hero-desc {
+    color: #8899AA;
+    font-size: 15px;
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    padding: 28px 0 4px;
+  }
+  .progress-steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+  }
+  .step-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 8px 0 0;
+  }
+  .step-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #aaa;
+    background: #fff;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .step-dot.active { border-color: var(--orange); background: var(--orange); color: #fff; }
+  .step-dot.done   { border-color: var(--teal); background: var(--teal); color: #fff; }
+  .step-label {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s;
+  }
+  .step-label.active { color: var(--orange); }
+  .step-label.done   { color: var(--teal); }
+  .progress-bar-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--teal));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--mid-text);
+    margin-bottom: 28px;
+  }
+
+  /* ── Questions ── */
+  .question-block { margin-bottom: 26px; }
+  .question-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--body-text);
+    margin-bottom: 10px;
+    line-height: 1.45;
+  }
+  .q-input, .q-select, .q-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--body-text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .q-input:focus, .q-select:focus, .q-textarea:focus { border-color: var(--orange); }
+  .q-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  .q-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+  /* multiselect chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .chip {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--mid-text);
+    font-size: 13px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--orange); color: var(--orange); }
+  .chip.selected { border-color: var(--orange); background: #FDF0EB; color: var(--orange); font-weight: 600; }
+
+  /* ── Nav buttons ── */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 48px;
+  }
+  .btn {
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-back { background: transparent; border: 1.5px solid var(--border); color: var(--mid-text); }
+  .btn-back:hover { border-color: var(--slate); color: var(--slate); }
+  .btn-next { background: var(--orange); color: #fff; }
+  .btn-next:hover { background: var(--orange-lt); }
+  .btn-next:disabled { background: #D9D9D5; color: #aaa; cursor: not-allowed; }
+  .btn-generate { background: var(--orange); color: #fff; padding: 14px 36px; font-size: 15px; }
+  .btn-generate:hover { background: var(--orange-lt); }
+  .btn-generate:disabled { background: #D9D9D5; color: #aaa; cursor: not-allowed; }
+
+  /* ── Generating state ── */
+  .generating-state {
+    text-align: center;
+    padding: 56px 0;
+  }
+  .gen-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.95)} }
+  .gen-text { color: var(--mid-text); font-size: 15px; }
+
+  /* ── Error ── */
+  .error-box {
+    background: #FFF3F0;
+    border: 1.5px solid var(--orange);
+    border-radius: 6px;
+    padding: 14px 18px;
+    color: var(--orange);
+    font-size: 14px;
+    margin-top: 16px;
+  }
+
+  /* ── Report ── */
+  #report { padding-top: 40px; }
+  .report-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .report-title {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    color: var(--near-black);
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    line-height: 1.2;
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--orange);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .section-card.visible { opacity: 1; transform: translateY(0); }
+  .section-card:nth-child(2) { border-left-color: var(--teal); }
+  .section-card:nth-child(3) { border-left-color: var(--slate); }
+  .section-card:nth-child(4) { border-left-color: var(--near-black); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card-icon { font-size: 20px; }
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--near-black);
+    letter-spacing: -0.01em;
+  }
+  .card-body {
+    font-size: 14px;
+    color: var(--body-text);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  .card-body strong { color: var(--near-black); font-weight: 700; }
+  .card-body .subsection-head {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin: 20px 0 6px;
+  }
+  .card-body:nth-child(2) .subsection-head { color: var(--teal); }
+
+  /* ── Section divider rule (brand signature) ── */
+  .section-rule {
+    width: 40px;
+    height: 3px;
+    background: var(--orange);
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  /* ── CTA block ── */
+  .cta-block {
+    background: var(--near-black);
+    border-radius: 8px;
+    padding: 36px 32px;
+    margin-top: 28px;
+    margin-bottom: 40px;
+  }
+  .cta-block h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .cta-block p { color: #8899AA; font-size: 14px; margin-bottom: 24px; }
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .tier-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .tier-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 4px;
+  }
+  .tier-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .tier-desc { font-size: 12px; color: #8899AA; line-height: 1.55; }
+  .btn-cta {
+    display: inline-block;
+    padding: 13px 30px;
+    background: var(--orange);
+    color: #fff;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn-cta:hover { background: var(--orange-lt); }
+
+  .restart-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--mid-text);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-family: var(--font);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .site-header { padding: 0 20px; }
+    .hero { padding: 36px 20px 40px; }
+    .section-card { padding: 22px 20px; }
+    .cta-block { padding: 28px 20px; }
+    .step-label { display: none; }
+    .header-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="logo-bar"></div>
+  <span class="logo-text">eMediaProse</span>
+  <span class="header-sub">AI Readiness Audit · emediaprose.com</span>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Free Assessment</div>
+    <h1>Is Your Business Ready for<br><span>Agentic AI?</span></h1>
+    <p class="hero-desc">Answer 12 questions. Get a personalized report with your AI readiness snapshot, a 30-day quick win, and a custom 90-day transformation roadmap.</p>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="container">
+
+  <!-- Quiz -->
+  <div id="quiz-wrap">
+    <div class="progress-wrap">
+      <div class="progress-steps" id="step-indicators"></div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progress-label"></div>
+    </div>
+
+    <div id="questions-area"></div>
+
+    <div class="nav-row">
+      <button class="btn btn-back" id="btn-back" onclick="goBack()" style="display:none">← Back</button>
+      <div style="margin-left:auto">
+        <button class="btn btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+      </div>
+    </div>
+
+    <div class="generating-state" id="gen-state" style="display:none">
+      <span class="gen-icon">⚡</span>
+      <p class="gen-text">Analyzing your inputs and building your personalized roadmap…</p>
+    </div>
+    <div class="error-box" id="error-box" style="display:none"></div>
+  </div>
+
+  <!-- Report -->
+  <div id="report" style="display:none"></div>
+
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const STEPS = [
+  {
+    label: "Business Context", icon: "🏢",
+    questions: [
+      { id:"industry", label:"What industry are you in?", type:"select",
+        options:["Healthcare / Medical Practice","Legal Services","Financial Services","Real Estate","Retail / E-commerce","Professional Services","Manufacturing","Nonprofit","Other"] },
+      { id:"teamSize", label:"How many people are on your team?", type:"select",
+        options:["1–5","6–25","26–100","101–500","500+"] },
+      { id:"techStack", label:"Which tools does your team use daily? (select all that apply)", type:"multi", hasOther:true,
+        options:["Google Workspace","Microsoft 365","Slack","HubSpot","Salesforce","QuickBooks / Wave","Notion","Asana / Monday","Zoom","Canva","Adobe Suite","Other / Custom"] },
+      { id:"revenue", label:"What are your top 1–2 revenue-generating workflows?", type:"textarea",
+        placeholder:"e.g., patient intake → appointment → billing, or lead → proposal → close" },
+    ]
+  },
+  {
+    label: "Content & Brand Assets", icon: "📁",
+    questions: [
+      { id:"contentHome", label:"Where does your brand content currently live?", type:"multi",
+        options:["Google Drive (organized)","Google Drive (scattered)","SharePoint / OneDrive","Dropbox","Local hard drives","Email attachments","Someone's desktop","No central location"] },
+      { id:"contentTypes", label:"What types of brand content do you have?", type:"multi",
+        options:["Logo files","Brand guidelines","Marketing copy / messaging","Product/service descriptions","Photos & images","Videos","Case studies / testimonials","Social media templates","Presentations","Contracts / proposals"] },
+      { id:"contentOwner", label:"Who currently manages your brand content?", type:"select",
+        options:["Dedicated marketing person","Shared responsibility across team","Leadership / founder","Outside agency or freelancer","No one owns it"] },
+    ]
+  },
+  {
+    label: "AI Exposure", icon: "🤖",
+    questions: [
+      { id:"aiTools", label:"Which AI tools does your team currently use?", type:"multi",
+        options:["ChatGPT","Claude","Google Gemini","Microsoft Copilot","Jasper / Copy.ai","Midjourney / DALL-E","Grammarly","Notion AI","HubSpot AI","None yet"] },
+      { id:"aiUse", label:"How is AI currently being used in your business?", type:"multi",
+        options:["Writing / editing content","Answering customer questions","Summarizing documents","Generating images","Automating emails","Data analysis","Scheduling / admin","Experimenting but not consistent","Not using AI yet"] },
+      { id:"aiReadiness", label:"How would you describe your team's comfort level with AI tools?", type:"select",
+        options:["Total beginners — haven't started","Curious — a few people experimenting","Moderate — some regular use, no strategy","Advanced — multiple tools, looking to scale","All-in — AI is already core to operations"] },
+    ]
+  },
+  {
+    label: "Pain & Ambition", icon: "🎯",
+    questions: [
+      { id:"biggestPain", label:"What's your single biggest operational bottleneck right now?", type:"textarea",
+        placeholder:"e.g., too much manual data entry, inconsistent client communication, slow content creation…" },
+      { id:"timeWaste", label:"Where does your team lose the most time each week?", type:"multi",
+        options:["Chasing approvals / status updates","Manually entering data","Searching for files or information","Writing repetitive content or emails","Scheduling and coordination","Client onboarding / intake","Reporting and analytics","Answering the same questions repeatedly"] },
+      { id:"win90", label:"What would a meaningful win look like in the next 90 days?", type:"textarea",
+        placeholder:"Describe the outcome that would make you say 'AI is working for us'…" },
+      { id:"companyName", label:"What's your company name? (for your personalized report)", type:"text",
+        placeholder:"Your company name" },
+    ]
+  }
+];
+
+const SECTION_META = [
+  { icon:"📊", title:"YOUR AI READINESS SNAPSHOT" },
+  { icon:"⚡", title:"YOUR 30-DAY QUICK WIN — AI-READY BRAND CONTENT HUB" },
+  { icon:"🗺️", title:"YOUR 90-DAY AGENTIC ROADMAP" },
+  { icon:"🚀", title:"YOUR EMEDIAPROSE IMPLEMENTATION PATH" },
+];
+
+const TIERS = [
+  { name:"AI Foundations", price:"$70/mo", desc:"Monthly strategy sessions + tool guidance. Ideal for teams starting their AI journey." },
+  { name:"AI Growth",      price:"$175/mo", desc:"Fractional AI consulting + workflow design. For teams ready to implement and scale." },
+  { name:"AI Agency",     price:"$350/mo", desc:"Full agentic system builds + ongoing optimization. For teams who want AI running the operation." },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentStep = 0;
+const answers = {};
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function renderStep() {
+  const step = STEPS[currentStep];
+  const total = STEPS.length;
+
+  // Progress indicators
+  const indic = document.getElementById('step-indicators');
+  indic.innerHTML = STEPS.map((s,i) => `
+    <div class="step-pill">
+      <div class="step-dot ${i<currentStep?'done':i===currentStep?'active':''}">${i<currentStep?'✓':(i+1)}</div>
+      <span class="step-label ${i<currentStep?'done':i===currentStep?'active':''}">${s.label}</span>
+    </div>`).join('');
+
+  document.getElementById('progress-fill').style.width = `${(currentStep/total)*100}%`;
+  document.getElementById('progress-label').textContent = `Step ${currentStep+1} of ${total} — ${step.label}`;
+
+  // Questions
+  const area = document.getElementById('questions-area');
+  area.innerHTML = step.questions.map(q => `
+    <div class="question-block">
+      <label class="question-label" for="q_${q.id}">${q.label}</label>
+      ${renderInput(q)}
+    </div>`).join('');
+
+  // Bind events
+  step.questions.forEach(q => {
+    if (q.type === 'select') {
+      document.getElementById(`q_${q.id}`).addEventListener('change', e => {
+        answers[q.id] = e.target.value; checkCanAdvance();
+      });
+    } else if (q.type === 'text' || q.type === 'textarea') {
+      document.getElementById(`q_${q.id}`).addEventListener('input', e => {
+        answers[q.id] = e.target.value.trim(); checkCanAdvance();
+      });
+    }
+  });
+
+  // Back/Next
+  document.getElementById('btn-back').style.display = currentStep > 0 ? 'block' : 'none';
+  const isLast = currentStep === total - 1;
+  const btn = document.getElementById('btn-next');
+  btn.textContent = isLast ? 'Generate My Report →' : 'Next →';
+  btn.className = `btn ${isLast ? 'btn-generate' : 'btn-next'}`;
+
+  checkCanAdvance();
+}
+
+function renderInput(q) {
+  const val = answers[q.id];
+  if (q.type === 'select') {
+    return `<select class="q-select" id="q_${q.id}">
+      <option value="">Select one…</option>
+      ${q.options.map(o=>`<option value="${o}" ${val===o?'selected':''}>${o}</option>`).join('')}
+    </select>`;
+  }
+  if (q.type === 'multi') {
+    const sel = val || [];
+    return `<div class="chips" id="chips_${q.id}">
+      ${q.options.map(o=>`
+        <div class="chip ${sel.includes(o)?'selected':''}" onclick="toggleChip('${q.id}','${o.replace(/'/g,"\\'")}',this)">${o}</div>
+      `).join('')}
+    </div>`;
+  }
+  if (q.type === 'textarea') {
+    return `<textarea class="q-textarea" id="q_${q.id}" placeholder="${q.placeholder||''}">${val||''}</textarea>`;
+  }
+  return `<input class="q-input" type="text" id="q_${q.id}" placeholder="${q.placeholder||''}" value="${val||''}" />`;
+}
+
+function toggleChip(qid, opt, el, hasOther) {
+  if (!answers[qid]) answers[qid] = [];
+  if (answers[qid].includes(opt)) {
+    answers[qid] = answers[qid].filter(v=>v!==opt);
+    el.classList.remove('selected');
+  } else {
+    answers[qid].push(opt);
+    el.classList.add('selected');
+  }
+  // Show/hide the "other" text field if this question supports it
+  if (hasOther && opt === 'Other / Custom') {
+    const wrap = document.getElementById('other_wrap_' + qid);
+    if (wrap) {
+      const isSelected = answers[qid].includes('Other / Custom');
+      wrap.style.display = isSelected ? 'block' : 'none';
+      if (!isSelected) { answers[qid + '_other'] = ''; }
+    }
+  }
+  checkCanAdvance();
+}
+
+function checkCanAdvance() {
+  const step = STEPS[currentStep];
+  const ok = step.questions.every(q => {
+    if (q.type === 'multi') return (answers[q.id]||[]).length > 0;
+    return answers[q.id] && answers[q.id].toString().trim() !== '';
+  });
+  document.getElementById('btn-next').disabled = !ok;
+}
+
+function goBack() {
+  if (currentStep > 0) { currentStep--; renderStep(); }
+}
+
+function goNext() {
+  if (currentStep < STEPS.length - 1) { currentStep++; renderStep(); }
+  else generateReport();
+}
+
+// ── Prompt ────────────────────────────────────────────────────────────────────
+function buildPrompt() {
+  const a = answers;
+  return `You are an expert AI transformation consultant writing a personalized AI Readiness Report for ${a.companyName||'this company'}.
+
+Here is what we know about them from their audit:
+
+BUSINESS CONTEXT:
+- Industry: ${a.industry}
+- Team size: ${a.teamSize}
+- Daily tools: ${(a.techStack||[]).filter(t=>t!=='Other / Custom').concat(a.techStack_other?[a.techStack_other]:[]).join(', ')}
+- Top revenue workflows: ${a.revenue}
+
+CONTENT & BRAND ASSETS:
+- Content currently lives in: ${(a.contentHome||[]).join(', ')}
+- Content types they have: ${(a.contentTypes||[]).join(', ')}
+- Who manages content: ${a.contentOwner}
+
+AI EXPOSURE:
+- AI tools in use: ${(a.aiTools||[]).join(', ')}
+- How AI is used: ${(a.aiUse||[]).join(', ')}
+- Team AI comfort level: ${a.aiReadiness}
+
+PAIN & AMBITION:
+- Biggest operational bottleneck: ${a.biggestPain}
+- Where they lose the most time: ${(a.timeWaste||[]).join(', ')}
+- What a 90-day win looks like: ${a.win90}
+
+Write a 4-section personalized report. Use **bold** for key terms. Use ### for subsection headers inside sections. Be specific to their actual answers — no generic advice.
+
+---
+
+SECTION 1: YOUR AI READINESS SNAPSHOT
+Write 3–4 paragraphs. Give an honest, direct assessment of where this company stands in their AI readiness journey. Reference their specific tools, workflows, and team size. Name what's working, what's missing, and what the single most important gap is. Speak like a consultant who just reviewed their operation — not a sales pitch, not a pep talk.
+
+---
+
+SECTION 2: YOUR 30-DAY QUICK WIN — BUILDING YOUR AI-READY BRAND CONTENT HUB
+Write a step-by-step workflow they can execute in 30 days without outside help. Customize it to their actual content situation. The goal is to consolidate all brand content into an AI/LLM-ready content management and digital asset management system — a centralized repository that AI agents can search to create new products or campaigns, positioning them for a future where most research originates with LLMs.
+
+Structure it as:
+### Week 1: Audit & Gather
+### Week 2: Standardize & Tag
+### Week 3: Centralize
+### Week 4: Test with AI & Declare Victory
+
+For each week, give 3–5 specific, actionable steps customized to their actual stack. Make the tagging and metadata instructions specific enough that someone could do them Monday morning. End with: "When this is complete, you'll have the foundational layer every agentic AI system needs to work for your business."
+
+---
+
+SECTION 3: YOUR 90-DAY AGENTIC ROADMAP
+Identify 3 specific workflow transformations based on their biggest pain points and time wasters. For each:
+- Name the workflow
+- Describe the current broken state (referencing their actual answers)
+- Describe what it looks like with an AI agent running it
+- Estimate the weekly time saved
+- Name which of their existing tools this would plug into
+
+---
+
+SECTION 4: YOUR EMEDIAPROSE IMPLEMENTATION PATH
+Write 2–3 paragraphs. Summarize what it would look like to have eMediaProse (an AI-first business transformation consultancy) execute this roadmap for them. Reference 1–2 specific items from their 90-day roadmap. Be warm but not salesy. End with: "The roadmap above is yours to keep. When you're ready to build it faster, we're one conversation away."
+
+Do not add any preamble or closing remarks outside these four sections. Begin immediately with SECTION 1.`;
+}
+
+// ── API call ──────────────────────────────────────────────────────────────────
+async function generateReport() {
+  document.getElementById('questions-area').style.display = 'none';
+  document.querySelector('.nav-row').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('gen-state').style.display = 'block';
+  document.getElementById('error-box').style.display = 'none';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: buildPrompt() }]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.content.map(c => c.text||'').join('');
+    const sections = parseSections(text);
+
+    document.getElementById('quiz-wrap').style.display = 'none';
+    renderReport(sections);
+  } catch(e) {
+    document.getElementById('questions-area').style.display = 'block';
+    document.querySelector('.nav-row').style.display = 'flex';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('gen-state').style.display = 'none';
+    const eb = document.getElementById('error-box');
+    eb.style.display = 'block';
+    eb.textContent = 'Something went wrong generating your report. Please try again.';
+  }
+}
+
+function parseSections(text) {
+  const regex = /SECTION \d+: ([^\n]+)\n([\s\S]*?)(?=SECTION \d+:|$)/g;
+  const sections = [];
+  let m;
+  while ((m = regex.exec(text)) !== null) sections.push({ title: m[1].trim(), content: m[2].trim() });
+  if (sections.length < 2) sections.push({ title: 'Your AI Readiness Report', content: text.trim() });
+  return sections;
+}
+
+function formatContent(raw) {
+  // ### headers → styled spans
+  let html = raw
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/###\s?(.+)/g, '<span class="subsection-head">$1</span>')
+    .replace(/^-\s/gm, '• ');
+  return html;
+}
+
+function renderReport(sections) {
+  const wrap = document.getElementById('report');
+  wrap.style.display = 'block';
+
+  const companyName = answers.companyName || 'Your Company';
+
+  wrap.innerHTML = `
+    <div class="report-eyebrow">AI Readiness Report · ${companyName}</div>
+    <div class="report-title">Your Personalized AI<br>Transformation Plan</div>
+    ${sections.map((s,i) => `
+      <div class="section-card" id="sec_${i}">
+        <div class="card-header">
+          <span class="card-icon">${SECTION_META[i]?.icon||'📄'}</span>
+          <div class="card-title">${s.title}</div>
+        </div>
+        <div class="section-rule" style="background:${['#E8450A','#3DBFBF','#5A6B82','#1A1A2E'][i]||'#E8450A'}"></div>
+        <div class="card-body">${formatContent(s.content)}</div>
+      </div>`).join('')}
+
+    <div class="cta-block">
+      <h3>Ready to Build This Together?</h3>
+      <p>eMediaProse offers three engagement tiers to match where you are in your AI journey.</p>
+      <div class="tier-grid">
+        ${TIERS.map(t=>`
+          <div class="tier-card">
+            <div class="tier-name">${t.name}</div>
+            <div class="tier-price">${t.price}</div>
+            <div class="tier-desc">${t.desc}</div>
+          </div>`).join('')}
+      </div>
+      <a href="https://emediaprose.com" target="_blank" class="btn-cta">Schedule a Free Discovery Call →</a>
+    </div>
+
+    <button class="restart-link" onclick="restartAudit()">Start over with a new company</button>
+  `;
+
+  // Staggered reveal
+  sections.forEach((_,i) => {
+    setTimeout(() => {
+      const el = document.getElementById(`sec_${i}`);
+      if (el) el.classList.add('visible');
+    }, i * 650);
+  });
+
+  wrap.scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartAudit() {
+  currentStep = 0;
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.getElementById('report').style.display = 'none';
+  document.getElementById('report').innerHTML = '';
+  document.getElementById('quiz-wrap').style.display = 'block';
+  document.getElementById('questions-area').style.display = 'block';
+  document.querySelector('.nav-row').style.display = 'flex';
+  document.querySelector('.progress-wrap').style.display = 'block';
+  renderStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderStep();
+</script>
+</body>
+</html>
