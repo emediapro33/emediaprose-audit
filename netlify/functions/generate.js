@@ -16,9 +16,9 @@ exports.handler = async function (event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Missing prompt' }) };
   }
 
-  const ANTHROPIC_KEY  = process.env.ANTHROPIC_API_KEY;
-  const SUPABASE_URL   = process.env.SUPABASE_URL;
-  const SUPABASE_KEY   = process.env.SUPABASE_SERVICE_KEY;
+  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+  const SUPABASE_URL  = process.env.SUPABASE_URL;
+  const SUPABASE_KEY  = process.env.SUPABASE_SERVICE_KEY;
 
   if (!ANTHROPIC_KEY) {
     return { statusCode: 500, body: JSON.stringify({ error: 'Anthropic API key not configured' }) };
@@ -35,11 +35,10 @@ exports.handler = async function (event) {
       },
       body: JSON.stringify({
         model:      'claude-sonnet-4-6',
-        max_tokens: 800,
-    messages: [
-  { role: 'user', content: prompt },
-  { role: 'assistant', content: 'I will be concise and direct in each section, using brief paragraphs and focused bullet points.' }
-],
+        max_tokens: 1500,
+        messages:   [{ role: 'user', content: prompt }],
+      }),
+    });
 
     const anthropicData = await anthropicRes.json();
     if (anthropicData.error) throw new Error(anthropicData.error.message || 'Anthropic error');
@@ -121,3 +120,4 @@ exports.handler = async function (event) {
     body: JSON.stringify({ report: reportText }),
   };
 };
+
