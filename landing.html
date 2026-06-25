@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Assessments · eMediaProse</title>
+<meta name="description" content="Two free assessments that diagnose your AI readiness and tech stack ROI in minutes. Built by eMediaProse for small and mid-sized businesses." />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange:     #E8450A;
+  --orange-lt:  #F26030;
+  --orange-bg:  #FDF0EB;
+  --teal:       #3DBFBF;
+  --teal-bg:    #EBF8F8;
+  --slate:      #5A6B82;
+  --near-black: #1A1A2E;
+  --body-text:  #2C2C2C;
+  --mid-text:   #666666;
+  --bg:         #F5F5F0;
+  --surface:    #FFFFFF;
+  --border:     #E0E0DA;
+  --font:       'Montserrat', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--body-text);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--near-black);
+  padding: 0 48px;
+  display: flex; align-items: center; gap: 12px; height: 52px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo-bar { width: 6px; height: 28px; background: var(--orange); border-radius: 2px; flex-shrink: 0; }
+.logo-text { color: #fff; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.header-link {
+  margin-left: auto; color: #8899AA; font-size: 13px; font-weight: 500;
+  text-decoration: none; transition: color 0.15s;
+}
+.header-link:hover { color: #fff; }
+
+/* ── Hero ── */
+.hero {
+  background: var(--near-black);
+  padding: 72px 48px 80px;
+  border-bottom: 3px solid var(--orange);
+  text-align: center;
+}
+.hero-eyebrow {
+  display: inline-block;
+  color: var(--orange); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 22px;
+  padding: 5px 14px;
+  border: 1px solid rgba(232,69,10,0.35);
+  border-radius: 20px;
+}
+.hero h1 {
+  color: #fff;
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--teal);
+}
+.hero-sub {
+  color: #8899AA; font-size: 16px; line-height: 1.7;
+  max-width: 500px; margin: 0 auto 36px;
+  font-weight: 500;
+}
+.hero-meta {
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; flex-wrap: wrap;
+}
+.hero-badge {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; color: #8899AA; font-weight: 500;
+}
+.hero-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal); flex-shrink: 0;
+}
+
+/* ── Two-door cards ── */
+.doors-section {
+  padding: 56px 32px 64px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.doors-label {
+  text-align: center;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--mid-text);
+  margin-bottom: 32px;
+}
+
+.doors-wrap {
+  display: grid;
+  grid-template-columns: 1fr 3px 1fr;
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 32px rgba(26,26,46,0.10);
+}
+
+/* ── The signature element: animated divider ── */
+.door-divider {
+  background: var(--orange);
+  position: relative;
+}
+.door-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--orange-lt);
+  animation: divPulse 1.8s ease-out forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+@keyframes divPulse {
+  0%   { opacity: 0; transform: scaleY(0); }
+  40%  { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(1); }
+}
+
+/* ── Door cards ── */
+.door {
+  padding: 48px 44px 44px;
+  display: flex; flex-direction: column;
+  transition: transform 0.2s ease;
+}
+.door-left  { background: var(--near-black); }
+.door-right { background: var(--surface); }
+
+.door-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 20px;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.door-left  .door-tag { color: var(--teal); }
+.door-right .door-tag { color: var(--orange); }
+
+.door-tag-line {
+  flex: 1; height: 1px; max-width: 40px;
+}
+.door-left  .door-tag-line { background: rgba(61,191,191,0.4); }
+.door-right .door-tag-line { background: rgba(232,69,10,0.3); }
+
+.door-icon { font-size: 32px; margin-bottom: 16px; line-height: 1; }
+
+.door h2 {
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 800; letter-spacing: -0.02em;
+  line-height: 1.2; margin-bottom: 14px;
+}
+.door-left  h2 { color: #fff; }
+.door-right h2 { color: var(--near-black); }
+
+.door-desc {
+  font-size: 14px; line-height: 1.75; margin-bottom: 28px; flex: 1;
+}
+.door-left  .door-desc { color: #8899AA; }
+.door-right .door-desc { color: var(--mid-text); }
+
+/* what you get list */
+.door-list { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 9px; }
+.door-list li {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 13px; font-weight: 500; line-height: 1.45;
+}
+.door-left  .door-list li { color: #C8D8E8; }
+.door-right .door-list li { color: var(--body-text); }
+.door-list li::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  margin-top: 5px; flex-shrink: 0;
+}
+.door-left  .door-list li::before { background: var(--teal); }
+.door-right .door-list li::before { background: var(--orange); }
+
+/* time badge */
+.door-time {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 6px;
+}
+.door-left  .door-time { color: rgba(61,191,191,0.8); }
+.door-right .door-time { color: rgba(232,69,10,0.8); }
+
+/* CTA buttons */
+.door-btn {
+  display: block; text-align: center; text-decoration: none;
+  padding: 14px 24px; border-radius: 7px;
+  font-family: var(--font); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.01em; transition: all 0.15s;
+}
+.door-left  .door-btn {
+  background: var(--teal); color: var(--near-black);
+}
+.door-left  .door-btn:hover { background: #4ECECE; }
+.door-right .door-btn {
+  background: var(--orange); color: #fff;
+}
+.door-right .door-btn:hover { background: var(--orange-lt); }
+
+/* ── How it works ── */
+.how-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 32px;
+}
+.how-inner { max-width: 840px; margin: 0 auto; }
+.how-eyebrow {
+  text-align: center;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--mid-text); margin-bottom: 40px;
+}
+.how-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.how-step {
+  padding: 0 36px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.how-step:first-child { padding-left: 0; }
+.how-step:last-child  { padding-right: 0; border-right: none; }
+
+.how-step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid var(--orange);
+  font-size: 16px; font-weight: 800; color: var(--orange);
+  margin-bottom: 16px;
+}
+.how-step h3 {
+  font-size: 15px; font-weight: 700; color: var(--near-black);
+  margin-bottom: 8px; letter-spacing: -0.01em;
+}
+.how-step p { font-size: 13px; color: var(--mid-text); line-height: 1.65; }
+
+/* ── Trust strip ── */
+.trust-section {
+  padding: 48px 32px;
+  max-width: 840px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 24px; text-align: center;
+}
+.trust-item {}
+.trust-val {
+  font-size: 32px; font-weight: 800; color: var(--near-black);
+  letter-spacing: -0.03em; line-height: 1;
+  margin-bottom: 6px;
+}
+.trust-val span { color: var(--orange); }
+.trust-desc { font-size: 12px; color: var(--mid-text); font-weight: 500; line-height: 1.5; }
+
+/* ── Footer ── */
+footer {
+  background: var(--near-black);
+  border-top: 3px solid var(--orange);
+  padding: 32px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; }
+.footer-brand-bar { width: 5px; height: 22px; background: var(--orange); border-radius: 2px; }
+.footer-brand-name { color: #fff; font-size: 14px; font-weight: 700; }
+.footer-links { display: flex; gap: 24px; align-items: center; }
+.footer-links a {
+  color: #8899AA; font-size: 13px; text-decoration: none;
+  font-weight: 500; transition: color 0.15s;
+}
+.footer-links a:hover { color: #fff; }
+.footer-copy { color: #5A6B82; font-size: 12px; }
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .site-header { padding: 0 20px; }
+  .hero { padding: 52px 24px 56px; }
+  .doors-section { padding: 36px 16px 48px; }
+  .doors-wrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 3px auto;
+  }
+  .door-divider { height: 3px; width: 100%; }
+  .door-divider::after { animation: none; }
+  .door { padding: 36px 28px 32px; }
+  .how-grid { grid-template-columns: 1fr; gap: 32px; }
+  .how-step { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 32px; }
+  .how-step:last-child { border-bottom: none; padding-bottom: 0; }
+  .trust-section { grid-template-columns: 1fr; gap: 28px; }
+  footer { flex-direction: column; align-items: flex-start; padding: 28px 24px; }
+  .footer-links { flex-wrap: wrap; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="logo-bar"></div>
+  <span class="logo-text">eMediaProse</span>
+  <a href="https://emediaprose.com" target="_blank" class="header-link">emediaprose.com ↗</a>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">Free Assessments · No Account Required</div>
+  <h1>Know exactly where<br><em>AI can work</em> for you</h1>
+  <p class="hero-sub">Two diagnostic tools built for business owners who want answers, not sales decks.</p>
+  <div class="hero-meta">
+    <div class="hero-badge"><div class="hero-badge-dot"></div> Takes 5–10 minutes</div>
+    <div class="hero-badge"><div class="hero-badge-dot"></div> Personalized results</div>
+    <div class="hero-badge"><div class="hero-badge-dot"></div> No email required to start</div>
+  </div>
+</section>
+
+<!-- Two-door cards -->
+<section class="doors-section">
+  <div class="doors-label">Choose your assessment</div>
+
+  <div class="doors-wrap">
+
+    <!-- Door 1: AI Readiness Audit -->
+    <div class="door door-left">
+      <div class="door-tag">
+        AI Readiness Audit
+        <div class="door-tag-line"></div>
+      </div>
+      <div class="door-icon">🧠</div>
+      <h2>How ready is your team for agentic AI?</h2>
+      <p class="door-desc">Answer 12 questions about your business context, content assets, AI exposure, and operational pain points. Get a Claude-generated report built around your actual situation.</p>
+      <ul class="door-list">
+        <li>AI readiness snapshot — honest, plain-language diagnosis</li>
+        <li>30-day quick win: build your AI-ready brand content hub</li>
+        <li>90-day agentic roadmap tailored to your workflows</li>
+        <li>Recommended eMediaProse implementation path</li>
+      </ul>
+      <div class="door-time">⏱ About 5 minutes</div>
+      <a href="index.html" class="door-btn">Start AI Readiness Audit →</a>
+    </div>
+
+    <!-- Divider -->
+    <div class="door-divider"></div>
+
+    <!-- Door 2: Tech Stack Audit -->
+    <div class="door door-right">
+      <div class="door-tag">
+        Tech Stack Audit
+        <div class="door-tag-line"></div>
+      </div>
+      <div class="door-icon">📊</div>
+      <h2>What is your current stack actually costing you?</h2>
+      <p class="door-desc">Enter your tool costs and operational signals. Get an instant ROI analysis — your customer acquisition cost, automation coverage, and estimated annual savings from a leaner stack.</p>
+      <ul class="door-list">
+        <li>Total annual tool cost breakdown by department</li>
+        <li>Current vs. potential CAC with efficiency modeling</li>
+        <li>Automation coverage score across your stack</li>
+        <li>Prioritized next steps to capture the savings</li>
+      </ul>
+      <div class="door-time">⏱ About 3 minutes</div>
+      <a href="tech-stack-audit.html" class="door-btn">Start Tech Stack Audit →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="how-eyebrow">How it works</div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <h3>Answer</h3>
+        <p>Share your business context, tools, costs, and where you lose the most time. No jargon, no trick questions.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <h3>Analyze</h3>
+        <p>Your inputs run through our diagnostic model — either AI-generated or ROI-calculated — in real time.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <h3>Act</h3>
+        <p>Walk away with a specific roadmap you can start executing this week, with or without us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust strip -->
+<div class="trust-section">
+  <div class="trust-item">
+    <div class="trust-val">5<span>–</span>10<span>min</span></div>
+    <div class="trust-desc">Total time to complete both assessments</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-val"><span>100%</span></div>
+    <div class="trust-desc">Free — no subscription or account required</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-val"><span>0</span></div>
+    <div class="trust-desc">Generic templates. Every report is built from your inputs.</div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-brand-bar"></div>
+    <span class="footer-brand-name">eMediaProse LLC</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://emediaprose.com" target="_blank">emediaprose.com</a>
+    <a href="index.html">AI Readiness Audit</a>
+    <a href="tech-stack-audit.html">Tech Stack Audit</a>
+    <a href="https://emediaprose.com" target="_blank">Book a Discovery Call</a>
+  </div>
+  <div class="footer-copy">© 2026 eMediaProse LLC · AI-first business transformation</div>
+</footer>
+
+</body>
+</html>
